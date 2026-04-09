@@ -1,8 +1,5 @@
-package org.example;
+package org.example.tokenizer;
 
-import org.example.tokenizer.Token;
-import org.example.tokenizer.TokenType;
-import org.example.tokenizer.Tokenizer;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
