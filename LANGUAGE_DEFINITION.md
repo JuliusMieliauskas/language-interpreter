@@ -1,0 +1,12 @@
+- Constant: 
+  - any number 
+- Assignment:
+  - VARIABLE = EXPRESSION 
+- if: 
+  - 'if' CONDITION 'then' CASE_TRUE 'else' CASE_FALSE 
+- while:
+  - 'while' CONDITION 'do' BODY 
+- function: 
+  - 'fun' FUNC_NAME(ARG1, ARG2, ...) { FUNC_BODY } 
+- multiple expressions on same line: 
+  - EXPRESSION_1, EXPRESSION_2, ..."
