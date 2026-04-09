@@ -81,6 +81,24 @@ class GivenExamplesTest {
         assertEquals(Map.of("b", 120), result);
     }
 
+    @Test
+    void evaluateCustomFunctionExpression() {
+        String codeSnippet = """
+                fun square(n) {
+                    return n*n
+                }
+                
+                fun square_sum(a, b) {
+                    return square(a) + square(b)
+                }
+                
+                b = square_sum(2, 3)
+                """;
+        Map<String, Integer> result = evaluate(codeSnippet);
+
+        assertEquals(Map.of("b", 13), result);
+    }
+
     private Map<String, Integer> evaluate(String source) {
         return evaluator.evaluate(new Parser(new Tokenizer(source).tokenize()).parse());
     }
