@@ -1,9 +1,13 @@
 package org.example.ast;
 
 public class NumberNode implements Node {
-    int value;
+    private final int value;
 
     public NumberNode(int value) {
         this.value = value;
+    }
+
+    public int getValue() {
+        return value;
     }
 }
