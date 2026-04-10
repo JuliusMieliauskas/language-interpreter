@@ -21,10 +21,24 @@ class EvaluatorTest {
     }
 
     @Test
+    void evaluatesNegativeNumberAssignment() {
+        Map<String, Integer> result = evaluate("x = -2");
+
+        assertEquals(Map.of("x", -2), result);
+    }
+
+    @Test
     void evaluatesBinaryExpressionOnAssignedVariable() {
         Map<String, Integer> result = evaluate("x = 2 + 3 * 4");
 
         assertEquals(Map.of("x", 14), result);
+    }
+
+    @Test
+    void evaluatesUnaryMinusExpression() {
+        Map<String, Integer> result = evaluate("x = -2 * 3");
+
+        assertEquals(Map.of("x", -6), result);
     }
 
     @Test

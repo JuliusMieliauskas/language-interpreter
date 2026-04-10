@@ -3,13 +3,13 @@ package org.example.parser;
 import org.example.ast.AssignNode;
 import org.example.ast.BooleanNode;
 import org.example.ast.BinaryOpNode;
-import org.example.ast.FunctionCallNode;
 import org.example.ast.FunctionDefNode;
 import org.example.ast.IfNode;
 import org.example.ast.Node;
 import org.example.ast.NumberNode;
 import org.example.ast.ReturnNode;
 import org.example.ast.SequenceNode;
+import org.example.ast.UnaryOpNode;
 import org.example.ast.WhileNode;
 import org.example.ast.VariableNode;
 import org.example.tokenizer.Tokenizer;
@@ -35,11 +35,21 @@ class ParserTest {
     }
 
     @Test
+    void parsesNegativeNumberInAssignment() {
+        AssignNode assign = assertInstanceOf(AssignNode.class, parse("a = -2"));
+        assertEquals("a", assign.getName());
+
+        UnaryOpNode unary = assertInstanceOf(UnaryOpNode.class, assign.getValue());
+        assertEquals("-", unary.getOp());
+        assertEquals(2, assertInstanceOf(NumberNode.class, unary.getOperand()).getValue());
+    }
+
+    @Test
     void parsesMultilineAssignment() {
         SequenceNode sequence = assertInstanceOf(SequenceNode.class, parse("x = 2\ny = 4 * x"));
         assertEquals(2, sequence.getExpressions().size());
 
-        AssignNode first = assertInstanceOf(AssignNode.class, sequence.getExpressions().get(0));
+        AssignNode first = assertInstanceOf(AssignNode.class, sequence.getExpressions().getFirst());
         assertEquals("x", first.getName());
         assertEquals(2, assertInstanceOf(NumberNode.class, first.getValue()).getValue());
 
@@ -61,14 +71,14 @@ class ParserTest {
         SequenceNode program = assertInstanceOf(SequenceNode.class, node);
         assertEquals(2, program.getExpressions().size());
 
-        FunctionDefNode function = assertInstanceOf(FunctionDefNode.class, program.getExpressions().get(0));
+        FunctionDefNode function = assertInstanceOf(FunctionDefNode.class, program.getExpressions().getFirst());
         assertEquals("fact_iter", function.getName());
         assertEquals(List.of("n"), function.getParams());
 
         SequenceNode body = assertInstanceOf(SequenceNode.class, function.getBody());
         assertEquals(2, body.getExpressions().size());
 
-        AssignNode init = assertInstanceOf(AssignNode.class, body.getExpressions().get(0));
+        AssignNode init = assertInstanceOf(AssignNode.class, body.getExpressions().getFirst());
         assertEquals("r", init.getName());
         assertEquals(1, assertInstanceOf(NumberNode.class, init.getValue()).getValue());
 
@@ -78,7 +88,7 @@ class ParserTest {
         SequenceNode loopBody = assertInstanceOf(SequenceNode.class, loop.getBody());
         assertEquals(2, loopBody.getExpressions().size());
 
-        IfNode conditional = assertInstanceOf(IfNode.class, loopBody.getExpressions().get(0));
+        IfNode conditional = assertInstanceOf(IfNode.class, loopBody.getExpressions().getFirst());
         BinaryOpNode condition = assertInstanceOf(BinaryOpNode.class, conditional.getCondition());
         assertEquals("==", condition.getOp());
 
@@ -107,6 +117,18 @@ class ParserTest {
         BinaryOpNode multiply = assertInstanceOf(BinaryOpNode.class, plus.getRight());
         assertEquals("*", multiply.getOp());
         assertEquals(2, assertInstanceOf(NumberNode.class, multiply.getLeft()).getValue());
+        assertEquals(3, assertInstanceOf(NumberNode.class, multiply.getRight()).getValue());
+    }
+
+    @Test
+    void parsesUnaryMinusBeforeMultiplication() {
+        BinaryOpNode multiply = assertInstanceOf(BinaryOpNode.class, parse("-2 * 3"));
+        assertEquals("*", multiply.getOp());
+
+        UnaryOpNode unary = assertInstanceOf(UnaryOpNode.class, multiply.getLeft());
+        assertEquals("-", unary.getOp());
+        assertEquals(2, assertInstanceOf(NumberNode.class, unary.getOperand()).getValue());
+
         assertEquals(3, assertInstanceOf(NumberNode.class, multiply.getRight()).getValue());
     }
 

@@ -8,6 +8,7 @@ import org.example.ast.FunctionDefNode;
 import org.example.ast.IfNode;
 import org.example.ast.Node;
 import org.example.ast.NumberNode;
+import org.example.ast.UnaryOpNode;
 import org.example.ast.ReturnNode;
 import org.example.ast.SequenceNode;
 import org.example.ast.VariableNode;
@@ -66,6 +67,14 @@ public class Evaluator {
 				case ">=" -> bool(left >= right);
 				default -> throw new IllegalArgumentException("Unsupported operator '" + binaryOpNode.getOp() + "'.");
 			};
+		}
+
+		if (node instanceof UnaryOpNode unaryOpNode) {
+			int value = evaluate(unaryOpNode.getOperand(), environment);
+			if ("-".equals(unaryOpNode.getOp())) {
+				return -value;
+			}
+			throw new IllegalArgumentException("Unsupported unary operator '" + unaryOpNode.getOp() + "'.");
 		}
 
 		if (node instanceof IfNode ifNode) {

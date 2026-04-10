@@ -79,15 +79,24 @@ public class Parser {
     }
 
     private Node parseMultiplicative() {
-        Node expr = parseCall();
+        Node expr = parseUnary();
 
         while (match(TokenType.STAR, TokenType.SLASH)) {
             Token operator = previous();
-            Node right = parseCall();
+            Node right = parseUnary();
             expr = new BinaryOpNode(expr, operator.lexeme(), right);
         }
 
         return expr;
+    }
+
+    private Node parseUnary() {
+        if (match(TokenType.MINUS)) {
+            Token operator = previous();
+            return new UnaryOpNode(operator.lexeme(), parseUnary());
+        }
+
+        return parseCall();
     }
 
     private Node parseCall() {
