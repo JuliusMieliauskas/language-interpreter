@@ -50,6 +50,6 @@ public class Environment {
 	}
 
 	public Map<String, Integer> snapshot() {
-		return Map.copyOf(values);
+		return new LinkedHashMap<>(values);
 	}
 }

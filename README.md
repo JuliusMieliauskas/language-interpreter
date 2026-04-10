@@ -36,3 +36,27 @@ Run the test suite with:
 mvn test
 ```
 
+## Run with custom input
+
+The program may be run with custom input, then the language source is standard input. 
+To run the program with custom input, first compile the project:
+
+```bash
+mvn compile
+```
+
+Then run the program:
+
+```bash
+YOUR_INPUT | java -cp target/classes org.example.LanguageInterpreter
+```
+
+Example: 
+
+```bash
+printf 'x = 2\ny = (x + 2) * 2\n' | java -cp target/classes org.example.LanguageInterpreter
+```
+
+You may use commands like 'printf' or 'cat' to provide the input.
+Or you can run it in interactive mode, without piping the input. Then simply type source code in interactive shell and press Ctrl+D to signal EOF (works in Linux terminals).
+The program will read the source code from standard input, execute it, and print the final variable map to standard output.
